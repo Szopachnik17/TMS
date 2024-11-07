@@ -48,14 +48,57 @@ class MyTime:
         return (self.hours, self.minutes, self.seconds) < (other.hours, other.minutes, other.seconds)
 
 
+    def __add__(self, other):
+        if isinstance(other, MyTime):
+            return MyTime(self.hours + other.hours, self.minutes + other.minutes, self.seconds + other.seconds)
+        raise TypeError("Можно складывать только с другим объектом MyTime")
+
+
+    def to_seconds(self):
+        return self.hours * 3600 + self.minutes * 60 + self.seconds
+
+
+    def __sub__(self, other):
+        if isinstance(other, MyTime):
+            total_seconds_self = self.to_seconds()
+            total_seconds_other = other.to_seconds()
+            diff = total_seconds_self - total_seconds_other
+            return MyTime.from_seconds(diff)
+        raise TypeError("Можно вычитать только другой объект MyTime")
+
+
+    def __mul__(self, number):
+        if isinstance(number, (int, float)):
+            total_seconds = self.to_seconds() * number
+            return MyTime.from_seconds(total_seconds)
+        raise TypeError("Можно умножать только на число")
+
+    @classmethod
+    def from_seconds(cls, total_seconds):
+        hours = total_seconds // 3600
+        total_seconds %= 3600
+        minutes = total_seconds // 60
+        seconds = total_seconds % 60
+        return cls(hours, minutes, seconds)
+
+
+
+
 
 time1 = MyTime("14:15:16")
-time2 = MyTime(14, 15, 16)
+time2 = MyTime(2, 15, 16)
 time3 = MyTime(time1)
 time4 = MyTime(23, 59, 61)
+time5 = time1 + time2
+time6 = time4 - time1
+time7 = time1 * 2
 print(time1)
 print(time2)
 print(time3)
 print(time1 == time2)
+print(time1 != time2)
 print(time1 > time2)
 print(time4)
+print(time5)
+print(time6)
+print(time7)
